@@ -183,7 +183,7 @@ export default function Home() {
         <section
           id="Home"
           data-scroll-section
-          className="-translate-y-10 flex w-full flex-col items-center xl:mt-0 xl:min-h-[85vh] xl:flex-row xl:justify-between pb-0"
+          className="-translate-y-5 flex w-full flex-col items-center xl:mt-0 xl:min-h-[85vh] xl:flex-row xl:justify-between pb-0"
         >
           <div className={styles.intro}>
             <div
@@ -234,7 +234,7 @@ export default function Home() {
                 className="transition-all"
               >
                 {isHovered ? "ishansh1200@gmail.com" : "Get in touch"}
-                {!isHovered && <ChevronRight className="ml-1 h-4 w-4" />}
+                {!isHovered && <ChevronRight className="ml-1 h-4 w-4 " />}
               </Button>
               <Button
                 variant="outline"
@@ -243,16 +243,6 @@ export default function Home() {
                 Learn more
               </Button>
             </span>
-
-            <div
-              className={cn(
-                styles.scroll,
-                isScrolled && styles["scroll--hidden"],
-              )}
-            >
-              Scroll to discover{" "}
-              <TriangleDownIcon className="mt-1 animate-bounce" />
-            </div>
           </div>
           <div
             data-scroll
@@ -267,14 +257,14 @@ export default function Home() {
         </section>
 
         {/* About */}
-        <section data-scroll-section id="About" className="mt-2">
+        <section data-scroll-section className="mt-2">
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
             className="flex max-w-6xl flex-col justify-start space-y-2"
           >
-            <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl">
+            <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl" id="About">
               ABOUT ME
             </span>
             <h2 className="py-3 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]">
@@ -311,6 +301,7 @@ export default function Home() {
         </section>
 
         {/* Projects */}
+        
         <section id="projects" data-scroll-section className="mt-10">
           {/* Gradient */}
           <div className="relative isolate">
