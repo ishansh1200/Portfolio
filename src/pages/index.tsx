@@ -10,10 +10,10 @@ import {
   Eye,
   MonitorSmartphone,
 } from "lucide-react";
-import { TriangleDownIcon } from "@radix-ui/react-icons";
+
 import Spline from "@splinetool/react-spline";
 import Link from "next/link";
-import { cn, scrollTo } from "@/lib/utils";
+import { scrollTo } from "@/lib/utils";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
