@@ -192,7 +192,7 @@ export default function Home() {
                 data-scroll
                 data-scroll-enable-touch-speed
                 data-scroll-speed=".06"
-                data-scroll-direction="horizontal"
+                data-scroll-direction="horizontal" 
               >
                 <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl">
                   Hello, I&apos;m
@@ -271,7 +271,7 @@ export default function Home() {
             </h2>
 
             <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]"> {/* Reduced py-3 to py-2 */}
-              <span className="italic">When I'm not coding</span>, I enjoy playing board games, playing sports, mostly football, and playing guitar. I also enjoy {" "}
+              <span className="italic">When I&apos;m not coding</span>, I enjoy playing board games, playing sports, mostly football, and playing guitar. I also enjoy {" "}
               <span className="font-medium">learning new things</span>. I am currently trying to learn {" "}
               <span className="font-medium">photo and video editing.</span>
             </h2>
@@ -315,7 +315,7 @@ export default function Home() {
             <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter" >
               ✨ Projects
             </span>
-            <h2 className="mt-1 text-4xl font-semibold tracking-tight tracking-tighter xl:text-6xl"> {/* Reduced mt-2 to mt-1 */}
+            <h2 className="mt-1 text-4xl font-semibold tracking-tight xl:text-6xl"> {/* Reduced mt-2 to mt-1 */}
               Streamlined digital experiences.
             </h2>
             <p className="mt-1 text-base tracking-tight text-muted-foreground xl:text-lg">
