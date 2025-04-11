@@ -35,34 +35,22 @@ const aboutStats = [
 
 const projects = [
   {
-    title: "Unqueue",
-    description: "E-commerce platform for selling digital products",
-    image: "/assets/unqueue.webm",
-    href: "https://unqueue.shop/",
+    title: "Innovriti",
+    description: "A promotional website for our college's annual Cultrual-technical fest.",
+    image: "/assets/innovriti.webm",
+    href: "https://innovriti.vercel.app/",
   },
   {
-    title: "InfiniteVPS",
-    description: "High performance VPS hosting solution",
-    image: "/assets/infinitevps.webm",
-    href: "#",
+    title: "Youtube V2",
+    description: "A fully functional youtube like website.",
+    image: "/assets/youtube.webm",
+    href: "https://youtube-clone-rho-plum.vercel.app/",
   },
   {
-    title: "TranslateBot",
-    description: "Powerful Multilingual Translation Bot for Discord",
-    image: "/assets/translate_bot.webm",
-    href: "https://translatebot.app/",
-  },
-  {
-    title: "Wrona",
-    description: "Robotics-focused technology company",
-    image: "/assets/wrona.jpeg",
-    href: "https://www.wrona.com/",
-  },
-  {
-    title: "This website",
-    description: "My personal website",
-    image: "/assets/portfolio.webm",
-    href: "https://github.com/wendoj/portfolio",
+    title: "Apple iPhone 15",
+    description: "A promotional website for the iPhone 15 pro",
+    image: "/assets/apple.webm",
+    href: "https://apple-clone-sandy-zeta.vercel.app/",
   },
 ];
 
@@ -74,7 +62,7 @@ const services = [
     icon: Code2,
   },
   {
-    service: "UX Design",
+    service: "UI/UX Design",
     description:
       "Building intuitive, user-centric designs that drive engagement and conversion.",
     icon: Frame,
@@ -106,7 +94,9 @@ export default function Home() {
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
 
-  const [isHovered, setIsHovered] = useState(false);
+  // Button hover states for all "Get in touch" buttons
+  const [isIntroButtonHovered, setIsIntroButtonHovered] = useState(false);
+  const [isContactButtonHovered, setIsContactButtonHovered] = useState(false);
 
   // handle scroll
   useEffect(() => {
@@ -179,11 +169,11 @@ export default function Home() {
       <div ref={refScrollContainer}>
         <Gradient />
 
-        {/* Intro */}
+        {/* Intro - Reduced vertical spacing */}
         <section
           id="Home"
           data-scroll-section
-          className="-translate-y-5 flex w-full flex-col items-center xl:mt-0 xl:min-h-[85vh] xl:flex-row xl:justify-between pb-0"
+          className=" flex w-full flex-col items-center xl:mt-0 xl:min-h-[80vh] xl:flex-row xl:justify-between mt-10 mb-12"
         >
           <div className={styles.intro}>
             <div
@@ -226,15 +216,19 @@ export default function Home() {
               data-scroll
               data-scroll-enable-touch-speed
               data-scroll-speed=".06"
-              className="flex flex-row items-center space-x-1.5 pt-4"
+              className="flex flex-row items-center space-x-1.5 pt-3"
             >
               <Button
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                className="transition-all"
+                onMouseEnter={() => setIsIntroButtonHovered(true)}
+                onMouseLeave={() => setIsIntroButtonHovered(false)}
+                className="relative overflow-hidden transition-all duration-300"
               >
-                {isHovered ? "ishansh1200@gmail.com" : "Get in touch"}
-                {!isHovered && <ChevronRight className="ml-1 h-4 w-4 " />}
+                <span className={`absolute inset-0 flex items-center justify-center text-[0.75rem] transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
+                  ishansh1200@gmail.com
+                </span>
+                <span className={`flex items-center transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
+                  Get in touch <ChevronRight className="ml-1 h-4 w-4" />
+                </span>
               </Button>
               <Button
                 variant="outline"
@@ -248,7 +242,7 @@ export default function Home() {
             data-scroll
             data-scroll-speed="-.01"
             id={styles["canvas-container"]}
-            className="mt-6 h-full w-full xl:mt-0"
+            className="mt-4 h-full w-full xl:mt-0" // Reduced mt-6 to mt-4
           >
             <Suspense fallback={<span>Loading...</span>}>
               <Spline scene="/assets/scene.splinecode" />
@@ -256,33 +250,33 @@ export default function Home() {
           </div>
         </section>
 
-        {/* About */}
-        <section data-scroll-section className="mt-2">
+        {/* About - Reduced vertical spacing */}
+        <section data-scroll-section className="mt-0"> {/* Changed from mt-2 to mt-0 */}
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
-            className="flex max-w-6xl flex-col justify-start space-y-2"
+            className="flex max-w-6xl flex-col justify-start space-y-1" // Reduced space-y-2 to space-y-1
           >
             <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl" id="About">
               ABOUT ME
             </span>
-            <h2 className="py-3 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]">
+            <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]"> {/* Reduced py-3 to py-2 */}
               I am currently pursuing a degree in {' '}
               <span className="font-medium">BTech-Artificial Intelligence</span>, and I decided to pursue my passion for programming. I started taking online courses and reading documentation about {' '}
               <span className="font-medium">full-stack web development</span>.
               <span className="italic"> My favorite part of programming</span> is the problem-solving aspect. I love the feeling of finally figuring out a solution to a problem. The stack I am aiming towards is
               <span className="font-medium"> React, Next.js, Node.js, and MongoDB</span>.
-              I am also familiar with C++, <span className="font-medium"> Python and JAVA </span>and am always looking to learn new technologies.
+              I am also familiar with C++, <span className="font-medium"> Python and JAVA </span>and am always looking to learn new technologies. I am also intersted in designing, with experience in <span className="font-medium"> Figma, Canva and Photoshop. </span>
             </h2>
 
-            <h2 className="py-3 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]">
-              <span className="italic">When I'm not coding</span>, I enjoy playing video games, watching movies, and playing with my dog. I also enjoy
-              <span className="font-medium">learning new things</span>. I am currently trying to learn
-              <span className="font-medium">photo and video editing along with playing guitar</span>.
+            <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]"> {/* Reduced py-3 to py-2 */}
+              <span className="italic">When I'm not coding</span>, I enjoy playing board games, playing sports, mostly football, and playing guitar. I also enjoy {" "}
+              <span className="font-medium">learning new things</span>. I am currently trying to learn {" "}
+              <span className="font-medium">photo and video editing.</span>
             </h2>
 
-            <div className="grid grid-cols-2 gap-6 xl:grid-cols-3 mt-2">
+            <div className="grid grid-cols-2 gap-4 xl:grid-cols-3 mt-1"> {/* Reduced gap-6 to gap-4 and mt-2 to mt-1 */}
               {aboutStats.map((stat) => (
                 <div
                   key={stat.label}
@@ -300,9 +294,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Projects */}
-        
-        <section id="projects" data-scroll-section className="mt-10">
+        {/* Projects - Reduced vertical spacing */}
+        <section data-scroll-section className="mt-6"> {/* Reduced mt-10 to mt-6 */}
           {/* Gradient */}
           <div className="relative isolate">
             <div
@@ -318,11 +311,11 @@ export default function Home() {
               />
             </div>
           </div>
-          <div data-scroll data-scroll-speed=".4" className="mt-6 mb-12">
-            <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter">
+          <div data-scroll data-scroll-speed=".4" className="mt-4 mb-8" id="projects"> {/* Reduced mt-6 to mt-4 and mb-12 to mb-8 */}
+            <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter" >
               ✨ Projects
             </span>
-            <h2 className="mt-2 text-4xl font-semibold tracking-tight tracking-tighter xl:text-6xl">
+            <h2 className="mt-1 text-4xl font-semibold tracking-tight tracking-tighter xl:text-6xl"> {/* Reduced mt-2 to mt-1 */}
               Streamlined digital experiences.
             </h2>
             <p className="mt-1 text-base tracking-tight text-muted-foreground xl:text-lg">
@@ -331,7 +324,7 @@ export default function Home() {
             </p>
 
             {/* Carousel */}
-            <div className="mt-6">
+            <div className="mt-4"> {/* Reduced mt-6 to mt-4 */}
               <Carousel setApi={setCarouselApi} className="w-full">
                 <CarouselContent>
                   {projects.map((project) => (
@@ -360,7 +353,7 @@ export default function Home() {
                           </Link>
                         </CardHeader>
                         <CardContent className="absolute bottom-0 w-full bg-background/50 backdrop-blur">
-                          <CardTitle className="border-t border-white/5 p-4 text-base font-normal tracking-tighter">
+                          <CardTitle className="border-t border-white/5 p-3 text-base font-normal tracking-tighter"> {/* Reduced p-4 to p-3 */}
                             {project.description}
                           </CardTitle>
                         </CardContent>
@@ -381,13 +374,13 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Services */}
-        <section id="services" data-scroll-section>
+        {/* Services - Reduced vertical spacing */}
+        <section data-scroll-section>
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
-            className="mt-2 mb-8 flex flex-col justify-start space-y-4"
+            className="mt-1 mb-6 flex flex-col justify-start space-y-3" /* Reduced mt-2 to mt-1, mb-8 to mb-6, and space-y-4 to space-y-3 */
           >
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -399,8 +392,8 @@ export default function Home() {
               viewport={{ once: true }}
               className="grid items-center gap-1 md:grid-cols-2 xl:grid-cols-3"
             >
-              <div className="flex flex-col py-2 xl:p-3">
-                <h2 className="text-4xl font-medium tracking-tight">
+              <div className="flex flex-col py-1 xl:p-2" id="services"> 
+                <h2 className="text-5xl font-medium tracking-tight" >
                   Need more info?
                   <br />
                   <span className="text-gradient clash-grotesk tracking-normal">
@@ -415,9 +408,9 @@ export default function Home() {
               {services.map((service) => (
                 <div
                   key={service.service}
-                  className="flex flex-col items-start rounded-md bg-white/5 p-6 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md"
+                  className="flex flex-col items-start rounded-md bg-white/5 p-4 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md" /* Reduced p-6 to p-4 */
                 >
-                  <service.icon className="my-2 text-primary" size={20} />
+                  <service.icon className="my-1 text-primary" size={20} /> {/* Reduced my-2 to my-1 */}
                   <span className="text-lg tracking-tight text-foreground">
                     {service.service}
                   </span>
@@ -430,13 +423,13 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Contact */}
-        <section id="contact" data-scroll-section className="mt-8 mb-12">
+        {/* Contact - Reduced vertical spacing */}
+        <section id="contact" data-scroll-section className="mt-6 mb-8"> {/* Reduced mt-8 to mt-6 and mb-12 to mb-8 */}
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
-            className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-6 py-8 text-center xl:py-10"
+            className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-6 py-6 text-center xl:py-8" /* Reduced py-8 to py-6 and xl:py-10 to xl:py-8 */
           >
             <h2 className="text-4xl font-medium tracking-tighter xl:text-6xl">
               Let&apos;s work{" "}
@@ -446,9 +439,18 @@ export default function Home() {
               I&apos;m currently available for freelance work and open to
               discussing new projects.
             </p>
-            <Link href="mailto:wendoj@proton.me" passHref>
-              <Button className="mt-4">Get in touch</Button>
-            </Link>
+            <Button 
+              onMouseEnter={() => setIsContactButtonHovered(true)}
+              onMouseLeave={() => setIsContactButtonHovered(false)}
+              className="mt-3 relative overflow-hidden transition-all duration-300" /* Reduced mt-4 to mt-3 */
+            >
+              <span className={`absolute inset-0 flex items-center justify-center text-[0.65rem] transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
+                ishansh1200@gmail.com
+              </span>
+              <span className={`flex items-center transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
+                Get in touch
+              </span>
+            </Button>
           </div>
         </section>
       </div>
