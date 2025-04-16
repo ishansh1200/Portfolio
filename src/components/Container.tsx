@@ -50,7 +50,7 @@ function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
   const section = document.querySelector(href);
   if (section) {
     const heading = section.querySelector("h2, h1");
-    scrollTo(heading || section);
+    scrollTo(heading ?? section); // <- updated here
   }
 }
 
@@ -82,7 +82,7 @@ export default function Container(props: ContainerProps) {
 
   const { children, ...customMeta } = props;
   const router = useRouter();
-  
+
   const meta = {
     title: "Ishan Sharma",
     description: "Full-stack developer and TypeScript enthusiast",
@@ -120,14 +120,23 @@ export default function Container(props: ContainerProps) {
         <meta name="twitter:image" content={meta.image} />
       </Head>
 
-      <nav className={cn(
-        "fixed w-full z-50 transition-all duration-300",
-        isScrolled ? "bg-background/90 backdrop-blur shadow-sm" : "bg-transparent",
-        styles.nav
-      )}>
+      <nav
+        className={cn(
+          "fixed w-full z-50 transition-all duration-300",
+          isScrolled
+            ? "bg-background/90 backdrop-blur shadow-sm"
+            : "bg-transparent",
+          styles.nav
+        )}
+      >
         <div className="container flex items-center justify-between h-16">
-          <Link href="https://www.linkedin.com/in/ishan-sharma-b5b0982b2/" className="text-xl font-bold">Ishan Sharma</Link>
-          
+          <Link
+            href="https://www.linkedin.com/in/ishan-sharma-b5b0982b2/"
+            className="text-xl font-bold"
+          >
+            Ishan Sharma
+          </Link>
+
           <ul className="hidden md:flex space-x-8">
             {navLinks.map((link, i) => (
               <NavItem key={link.href} {...link} i={i} />
@@ -147,10 +156,10 @@ export default function Container(props: ContainerProps) {
           {isOpen && (
             <motion.div
               className="fixed inset-0 z-40 bg-background md:hidden"
-              initial={{ x: '100%' }}
+              initial={{ x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'tween' }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween" }}
             >
               <div className="container h-full flex flex-col">
                 <div className="flex justify-between items-center h-16">
@@ -162,7 +171,7 @@ export default function Container(props: ContainerProps) {
                     <CrossIcon data-hide={false} />
                   </button>
                 </div>
-                
+
                 <ul className="flex-1 space-y-6 py-8">
                   {navLinks.map((link, i) => (
                     <li key={link.href}>
@@ -190,12 +199,12 @@ export default function Container(props: ContainerProps) {
       </AnimatePresence>
 
       <main className={cn("container", props.className)}>
-        {React.Children.map(children, child => 
+        {React.Children.map(children, (child) =>
           React.cloneElement(child as React.ReactElement, {
             className: cn(
               (child as React.ReactElement).props.className,
               "py-24"
-            )
+            ),
           })
         )}
       </main>
@@ -206,13 +215,35 @@ export default function Container(props: ContainerProps) {
 }
 
 const MenuIcon = ({ ...props }: IconProps) => (
-  <svg {...props} className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+  <svg
+    {...props}
+    className="h-6 w-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M4 6h16M4 12h16M4 18h16"
+    />
   </svg>
 );
 
 const CrossIcon = ({ ...props }: IconProps) => (
-  <svg {...props} className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  <svg
+    {...props}
+    className="h-6 w-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 18L18 6M6 6l12 12"
+    />
   </svg>
 );
