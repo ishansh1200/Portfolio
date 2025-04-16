@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn, scrollTo } from "@/lib/utils";
-import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
 import Preloader from "@/components/Preloader";
@@ -50,7 +49,7 @@ function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
   const section = document.querySelector(href);
   if (section) {
     const heading = section.querySelector("h2, h1");
-    scrollTo(heading ?? section); // <- updated here
+    scrollTo(heading ?? section);
   }
 }
 
@@ -199,14 +198,13 @@ export default function Container(props: ContainerProps) {
       </AnimatePresence>
 
       <main className={cn("container", props.className)}>
-        {React.Children.map(children, (child) =>
-          React.cloneElement(child as React.ReactElement, {
-            className: cn(
-              (child as React.ReactElement).props.className,
-              "py-24"
-            ),
-          })
-        )}
+        {React.Children.map(children, (child) => {
+          if (!React.isValidElement<{ className?: string }>(child)) return child;
+
+          return React.cloneElement(child, {
+            className: cn(child.props.className, "py-24"),
+          });
+        })}
       </main>
 
       <Footer />
