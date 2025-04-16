@@ -186,6 +186,7 @@ export default function Home() {
               <span className={styles.pill}>tailwindcss</span>
               <span className={styles.pill}>typescript</span>
               <span className={styles.pill}>three.js</span>
+              <span className={styles.pill}>next.js</span>
             </div>
             <div>
               <h1
