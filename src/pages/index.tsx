@@ -192,7 +192,7 @@ export default function Home() {
                 data-scroll
                 data-scroll-enable-touch-speed
                 data-scroll-speed=".06"
-                data-scroll-direction="horizontal" 
+                data-scroll-direction="horizontal"
               >
                 <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl">
                   Hello, I&apos;m
@@ -230,12 +230,11 @@ export default function Home() {
                   Get in touch <ChevronRight className="ml-1 h-4 w-4" />
                 </span>
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => scrollTo(document.querySelector("#about"))}
-              >
-                Learn more
-              </Button>
+              <Link href="/assets/cv.pdf" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline">
+                  Download CV
+                </Button>
+              </Link>
             </span>
           </div>
           <div
@@ -392,7 +391,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="grid items-center gap-1 md:grid-cols-2 xl:grid-cols-3"
             >
-              <div className="flex flex-col py-1 xl:p-2" id="services"> 
+              <div className="flex flex-col py-1 xl:p-2" id="services">
                 <h2 className="text-5xl font-medium tracking-tight" >
                   Need more info?
                   <br />
@@ -439,7 +438,7 @@ export default function Home() {
               I&apos;m currently available for freelance work and open to
               discussing new projects.
             </p>
-            <Button 
+            <Button
               onMouseEnter={() => setIsContactButtonHovered(true)}
               onMouseLeave={() => setIsContactButtonHovered(false)}
               className="mt-3 relative overflow-hidden transition-all duration-300" /* Reduced mt-4 to mt-3 */
