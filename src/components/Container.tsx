@@ -41,22 +41,20 @@ const navLinks = [
   { href: "#services", text: "Services" },
 ];
 
-// Improved scroll function with smooth behavior
+// Simple scroll function with minimal animation
 function scrollTo(element: Element) {
-  // Get the element's position relative to the viewport
-  const rect = element.getBoundingClientRect();
-  // Account for potential fixed header
-  const headerOffset = 80; // Adjust based on your header height
-  const offsetPosition = rect.top + window.pageYOffset - headerOffset;
+  const headerOffset = 64; // Adjust based on your header height
+  const elementPosition = element.getBoundingClientRect().top;
+  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
   
   window.scrollTo({
     top: offsetPosition,
-    behavior: "smooth"
+    behavior: "auto" // Changed to auto for normal scrolling
   });
 }
 
-// Memoized click handler to prevent re-creation on renders
-const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, closeMenu?: () => void) => {
+// Simple click handler
+function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, closeMenu?: () => void) {
   const href = e.currentTarget.getAttribute("href");
   if (!href?.startsWith("#")) return;
 
@@ -67,9 +65,9 @@ const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, closeMe
     scrollTo(heading ?? section);
     if (closeMenu) closeMenu();
   }
-};
+}
 
-// Create NavItem component with proper display name
+// NavItem component with display name
 function NavItemComponent(props: NavProps) {
   return (
     <motion.li
@@ -90,7 +88,6 @@ function NavItemComponent(props: NavProps) {
     </motion.li>
   );
 }
-// Apply memo with display name preserved
 const NavItem = React.memo(NavItemComponent);
 NavItem.displayName = 'NavItem';
 
@@ -156,22 +153,30 @@ export default function Container(props: ContainerProps) {
   // Close menu function
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
-  // Debounced and throttled scroll handler
+  // Simplified scroll handler with throttling
   useEffect(() => {
-    let ticking = false;
+    let timeout: NodeJS.Timeout;
+    
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 0);
-          ticking = false;
-        });
-        ticking = true;
+      // Clear timeout if it exists
+      if (timeout) {
+        clearTimeout(timeout);
       }
+      
+      // Set a timeout to update state after scrolling stops
+      timeout = setTimeout(() => {
+        setIsScrolled(window.scrollY > 0);
+      }, 100);
     };
     
-    // Use passive event listener for better scroll performance
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -211,7 +216,7 @@ export default function Container(props: ContainerProps) {
 
       <nav
         className={cn(
-          "fixed w-full z-50 transition-all duration-300",
+          "fixed w-full z-50 transition-colors duration-200", // Simplified transitions
           isScrolled
             ? "bg-background/90 backdrop-blur shadow-sm"
             : "bg-transparent",
@@ -246,10 +251,10 @@ export default function Container(props: ContainerProps) {
           {isOpen && (
             <motion.div
               className="fixed inset-0 z-40 bg-background md:hidden"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
             >
               <div className="container h-full flex flex-col">
                 <div className="flex justify-between items-center h-16">
@@ -301,5 +306,4 @@ export default function Container(props: ContainerProps) {
   );
 }
 
-// Set display name for Container component
 Container.displayName = 'Container';
