@@ -269,7 +269,7 @@ export default function Home() {
                 className="relative overflow-hidden transition-all duration-300"
               >
                 <span className={`absolute inset-0 flex items-center justify-center text-[0.75rem] transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
-                  ishansh1200@gmail.com
+                  sharma.ishan1910@gmail.com
                 </span>
                 <span className={`flex items-center transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
                   Get in touch <ChevronRight className="ml-1 h-4 w-4" />
@@ -489,7 +489,7 @@ export default function Home() {
               className="mt-3 relative overflow-hidden transition-all duration-300" /* Reduced mt-4 to mt-3 */
             >
               <span className={`absolute inset-0 flex items-center justify-center text-[0.65rem] transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
-                ishansh1200@gmail.com
+                sharma.ishan1910@gmail.com
               </span>
               <span className={`flex items-center transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
                 Get in touch
