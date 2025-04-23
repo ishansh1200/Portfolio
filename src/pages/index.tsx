@@ -171,7 +171,6 @@ export default function Home() {
 
         {/* Intro - Reduced vertical spacing */}
         <section
-          id="Home"
           data-scroll-section
           className=" flex w-full flex-col items-center xl:mt-0 xl:min-h-[80vh] xl:flex-row xl:justify-between mt-10 mb-12"
         >
@@ -195,7 +194,7 @@ export default function Home() {
                 data-scroll-speed=".06"
                 data-scroll-direction="horizontal"
               >
-                <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl">
+                <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl" id="Home">
                   Hello, I&apos;m
                   <br />
                 </span>
@@ -251,14 +250,14 @@ export default function Home() {
         </section>
 
         {/* About - Reduced vertical spacing */}
-        <section data-scroll-section className="mt-0"> {/* Changed from mt-2 to mt-0 */}
+        <section data-scroll-section className="mt-0" id="About"> {/* Changed from mt-2 to mt-0 */}
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
             className="flex max-w-6xl flex-col justify-start space-y-1" // Reduced space-y-2 to space-y-1
           >
-            <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl" id="About">
+            <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl" >
               ABOUT ME
             </span>
             <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]"> {/* Reduced py-3 to py-2 */}
@@ -295,7 +294,7 @@ export default function Home() {
         </section>
 
         {/* Projects - Reduced vertical spacing */}
-        <section data-scroll-section className="mt-6"> {/* Reduced mt-10 to mt-6 */}
+        <section data-scroll-section className="mt-6" id="projects"> {/* Reduced mt-10 to mt-6 */}
           {/* Gradient */}
           <div className="relative isolate">
             <div
@@ -311,7 +310,7 @@ export default function Home() {
               />
             </div>
           </div>
-          <div data-scroll data-scroll-speed=".4" className="mt-4 mb-8" id="projects"> {/* Reduced mt-6 to mt-4 and mb-12 to mb-8 */}
+          <div data-scroll data-scroll-speed=".4" className="mt-4 mb-8" > {/* Reduced mt-6 to mt-4 and mb-12 to mb-8 */}
             <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter" >
               ✨ Projects
             </span>
