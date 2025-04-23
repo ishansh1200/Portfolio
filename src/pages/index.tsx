@@ -268,7 +268,7 @@ export default function Home() {
                 onMouseLeave={() => setIsIntroButtonHovered(false)}
                 className="relative overflow-hidden transition-all duration-300"
               >
-                <span className={`absolute inset-0 flex items-center justify-center text-[0.75rem] transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
+                <span className={`absolute inset-0 flex items-center justify-center text-[0.6rem] transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
                   sharma.ishan1910@gmail.com
                 </span>
                 <span className={`flex items-center transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
@@ -488,7 +488,7 @@ export default function Home() {
               onMouseLeave={() => setIsContactButtonHovered(false)}
               className="mt-3 relative overflow-hidden transition-all duration-300" /* Reduced mt-4 to mt-3 */
             >
-              <span className={`absolute inset-0 flex items-center justify-center text-[0.65rem] transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
+              <span className={`absolute inset-0 flex items-center justify-center text-[0.55rem] transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
                 sharma.ishan1910@gmail.com
               </span>
               <span className={`flex items-center transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
