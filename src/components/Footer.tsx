@@ -37,7 +37,7 @@ export default function Footer() {
             </Link>
           </p>
           <hr className="hidden h-6 border-l border-muted md:flex" />
-          <span className="flex hidden flex-row items-center space-x-2 md:flex">
+          <span className="flex flex-row items-center space-x-2 md:flex">
             <p className="text-xs text-muted-foreground">Local time:</p>
             <p className="text-sm font-semibold">{time}</p>
           </span>

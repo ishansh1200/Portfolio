@@ -26,6 +26,12 @@ import {
 import VanillaTilt from "vanilla-tilt";
 import { motion } from "framer-motion";
 
+// Define a type for Locomotive Scroll instance
+type LocomotiveScrollType = {
+  scrollTo: (target: HTMLElement | string | number, options?: { offset?: number; duration?: number; disableLerp?: boolean }) => void;
+  destroy: () => void;
+};
+
 const aboutStats = [
   { label: "Years of experience", value: "1+" },
   { label: "Technologies mastered", value: "5+" },
@@ -92,7 +98,7 @@ export default function Home() {
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
-  const [locomotiveScroll, setLocomotiveScroll] = useState<LocomotiveScroll | null>(null);
+  const [locomotiveScroll, setLocomotiveScroll] = useState<LocomotiveScrollType | null>(null);
 
   // Button hover states for all "Get in touch" buttons
   const [isIntroButtonHovered, setIsIntroButtonHovered] = useState(false);
@@ -104,39 +110,46 @@ export default function Home() {
     const navLinks = document.querySelectorAll(".nav-link");
 
     async function getLocomotive() {
-      const Locomotive = (await import("locomotive-scroll")).default;
-      const locoScroll = new Locomotive({
-        el: refScrollContainer.current ?? new HTMLElement(),
-        smooth: true,
-        offset: [0, 0],
-      });
-      
-      setLocomotiveScroll(locoScroll);
-      
-      // Add event listener for hash changes
-      document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
+      try {
+        const LocomotiveModule = await import("locomotive-scroll");
+        const Locomotive = LocomotiveModule.default;
         
-        // Check if clicked element is a navigation link
-        if (target.classList.contains('nav-link')) {
-          e.preventDefault();
+        // Create the Locomotive Scroll instance and properly type it
+        const locoScroll = new Locomotive({
+          el: refScrollContainer.current ?? undefined,
+          smooth: true,
+          offset: [0, 0],
+        }) as unknown as LocomotiveScrollType; // Type assertion to match our interface
+        
+        setLocomotiveScroll(locoScroll);
+        
+        // Add event listener for hash changes
+        document.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
           
-          const href = target.getAttribute('href');
-          if (href && href.startsWith('#')) {
-            const targetId = href.substring(1);
-            const targetSection = document.getElementById(targetId);
+          // Check if clicked element is a navigation link
+          if (target.classList.contains('nav-link')) {
+            e.preventDefault();
             
-            if (targetSection && locoScroll) {
-              // Scroll to section with offset
-              locoScroll.scrollTo(targetSection, {
-                offset: 0,
-                duration: 1000,
-                disableLerp: false,
-              });
+            const href = target.getAttribute('href');
+            if (href && href.startsWith('#')) {
+              const targetId = href.substring(1);
+              const targetSection = document.getElementById(targetId);
+              
+              if (targetSection && locoScroll) {
+                // Scroll to section with offset
+                locoScroll.scrollTo(targetSection, {
+                  offset: 0,
+                  duration: 1000,
+                  disableLerp: false,
+                });
+              }
             }
           }
-        }
-      });
+        });
+      } catch (error) {
+        console.error("Failed to load locomotive-scroll:", error);
+      }
     }
 
     function handleScroll() {
@@ -169,7 +182,7 @@ export default function Home() {
         locomotiveScroll.destroy();
       }
     };
-  }, [locomotiveScroll]);
+  }, []);
 
   useEffect(() => {
     if (!carouselApi) return;
