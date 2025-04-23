@@ -69,8 +69,8 @@ const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, closeMe
   }
 };
 
-// Memoized NavItem component
-const NavItem = React.memo(function NavItem(props: NavProps) {
+// Create NavItem component with proper display name
+function NavItemComponent(props: NavProps) {
   return (
     <motion.li
       className={props.className}
@@ -89,42 +89,53 @@ const NavItem = React.memo(function NavItem(props: NavProps) {
       </a>
     </motion.li>
   );
-});
+}
+// Apply memo with display name preserved
+const NavItem = React.memo(NavItemComponent);
+NavItem.displayName = 'NavItem';
 
-// Memoized icon components
-const MenuIcon = React.memo(({ ...props }: IconProps) => (
-  <svg
-    {...props}
-    className="h-6 w-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M4 6h16M4 12h16M4 18h16"
-    />
-  </svg>
-));
+// Icon components with display names
+function MenuIconComponent({ ...props }: IconProps) {
+  return (
+    <svg
+      {...props}
+      className="h-6 w-6"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 6h16M4 12h16M4 18h16"
+      />
+    </svg>
+  );
+}
+const MenuIcon = React.memo(MenuIconComponent);
+MenuIcon.displayName = 'MenuIcon';
 
-const CrossIcon = React.memo(({ ...props }: IconProps) => (
-  <svg
-    {...props}
-    className="h-6 w-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-));
+function CrossIconComponent({ ...props }: IconProps) {
+  return (
+    <svg
+      {...props}
+      className="h-6 w-6"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  );
+}
+const CrossIcon = React.memo(CrossIconComponent);
+CrossIcon.displayName = 'CrossIcon';
 
 export default function Container(props: ContainerProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -289,3 +300,6 @@ export default function Container(props: ContainerProps) {
     </>
   );
 }
+
+// Set display name for Container component
+Container.displayName = 'Container';
