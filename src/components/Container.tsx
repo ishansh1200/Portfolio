@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn, scrollTo } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
 import Preloader from "@/components/Preloader";
@@ -41,7 +41,22 @@ const navLinks = [
   { href: "#services", text: "Services" },
 ];
 
-function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+// Improved scroll function with smooth behavior
+function scrollTo(element: Element) {
+  // Get the element's position relative to the viewport
+  const rect = element.getBoundingClientRect();
+  // Account for potential fixed header
+  const headerOffset = 80; // Adjust based on your header height
+  const offsetPosition = rect.top + window.pageYOffset - headerOffset;
+  
+  window.scrollTo({
+    top: offsetPosition,
+    behavior: "smooth"
+  });
+}
+
+// Memoized click handler to prevent re-creation on renders
+const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, closeMenu?: () => void) => {
   const href = e.currentTarget.getAttribute("href");
   if (!href?.startsWith("#")) return;
 
@@ -50,10 +65,12 @@ function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
   if (section) {
     const heading = section.querySelector("h2, h1");
     scrollTo(heading ?? section);
+    if (closeMenu) closeMenu();
   }
-}
+};
 
-function NavItem(props: NavProps) {
+// Memoized NavItem component
+const NavItem = React.memo(function NavItem(props: NavProps) {
   return (
     <motion.li
       className={props.className}
@@ -72,7 +89,42 @@ function NavItem(props: NavProps) {
       </a>
     </motion.li>
   );
-}
+});
+
+// Memoized icon components
+const MenuIcon = React.memo(({ ...props }: IconProps) => (
+  <svg
+    {...props}
+    className="h-6 w-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M4 6h16M4 12h16M4 18h16"
+    />
+  </svg>
+));
+
+const CrossIcon = React.memo(({ ...props }: IconProps) => (
+  <svg
+    {...props}
+    className="h-6 w-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 18L18 6M6 6l12 12"
+    />
+  </svg>
+));
 
 export default function Container(props: ContainerProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,9 +142,24 @@ export default function Container(props: ContainerProps) {
     ...customMeta,
   };
 
+  // Close menu function
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+
+  // Debounced and throttled scroll handler
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 0);
-    window.addEventListener("scroll", handleScroll);
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 0);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    // Use passive event listener for better scroll performance
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -103,6 +170,18 @@ export default function Container(props: ContainerProps) {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -145,6 +224,7 @@ export default function Container(props: ContainerProps) {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-accent"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
           >
             <MenuIcon data-hide={isOpen} />
             <CrossIcon data-hide={!isOpen} />
@@ -158,14 +238,15 @@ export default function Container(props: ContainerProps) {
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "tween" }}
+              transition={{ type: "tween", duration: 0.3 }}
             >
               <div className="container h-full flex flex-col">
                 <div className="flex justify-between items-center h-16">
                   <span className="text-xl font-bold">Menu</span>
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMenu}
                     className="p-2 rounded-lg hover:bg-accent"
+                    aria-label="Close menu"
                   >
                     <CrossIcon data-hide={false} />
                   </button>
@@ -176,11 +257,8 @@ export default function Container(props: ContainerProps) {
                     <li key={link.href}>
                       <a
                         href={link.href}
-                        onClick={(e) => {
-                          handleClick(e);
-                          setIsOpen(false);
-                        }}
-                        className="text-2xl font-medium"
+                        onClick={(e) => handleClick(e, closeMenu)}
+                        className="text-2xl font-medium block py-2"
                       >
                         {link.text}
                       </a>
@@ -211,37 +289,3 @@ export default function Container(props: ContainerProps) {
     </>
   );
 }
-
-const MenuIcon = ({ ...props }: IconProps) => (
-  <svg
-    {...props}
-    className="h-6 w-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M4 6h16M4 12h16M4 18h16"
-    />
-  </svg>
-);
-
-const CrossIcon = ({ ...props }: IconProps) => (
-  <svg
-    {...props}
-    className="h-6 w-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-);
