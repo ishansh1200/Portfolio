@@ -92,6 +92,7 @@ export default function Home() {
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
+  const [locomotiveScroll, setLocomotiveScroll] = useState<LocomotiveScroll | null>(null);
 
   // Button hover states for all "Get in touch" buttons
   const [isIntroButtonHovered, setIsIntroButtonHovered] = useState(false);
@@ -104,9 +105,37 @@ export default function Home() {
 
     async function getLocomotive() {
       const Locomotive = (await import("locomotive-scroll")).default;
-      new Locomotive({
+      const locoScroll = new Locomotive({
         el: refScrollContainer.current ?? new HTMLElement(),
         smooth: true,
+        offset: [0, 0],
+      });
+      
+      setLocomotiveScroll(locoScroll);
+      
+      // Add event listener for hash changes
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        
+        // Check if clicked element is a navigation link
+        if (target.classList.contains('nav-link')) {
+          e.preventDefault();
+          
+          const href = target.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            const targetId = href.substring(1);
+            const targetSection = document.getElementById(targetId);
+            
+            if (targetSection && locoScroll) {
+              // Scroll to section with offset
+              locoScroll.scrollTo(targetSection, {
+                offset: 0,
+                duration: 1000,
+                disableLerp: false,
+              });
+            }
+          }
+        }
       });
     }
 
@@ -126,7 +155,6 @@ export default function Home() {
 
         if (li.getAttribute("href") === `#${current}`) {
           li.classList.add("nav-active");
-          console.log(li.getAttribute("href"));
         }
       });
     }
@@ -136,8 +164,12 @@ export default function Home() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      // Clean up locomotive scroll instance
+      if (locomotiveScroll) {
+        locomotiveScroll.destroy();
+      }
     };
-  }, []);
+  }, [locomotiveScroll]);
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -171,6 +203,7 @@ export default function Home() {
         {/* Intro - Reduced vertical spacing */}
         <section
           data-scroll-section
+          id="Home"
           className=" flex w-full flex-col items-center xl:mt-0 xl:min-h-[80vh] xl:flex-row xl:justify-between mt-10 mb-12"
         >
           <div className={styles.intro}>
@@ -193,7 +226,7 @@ export default function Home() {
                 data-scroll-speed=".06"
                 data-scroll-direction="horizontal"
               >
-                <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl" id="Home">
+                <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl">
                   Hello, I&apos;m
                   <br />
                 </span>
@@ -223,7 +256,7 @@ export default function Home() {
                 className="relative overflow-hidden transition-all duration-300"
               >
                 <span className={`absolute inset-0 flex items-center justify-center text-[0.75rem] transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
-                  sharma.ishan.1910@gmail.com
+                  ishansh1200@gmail.com
                 </span>
                 <span className={`flex items-center transition-opacity duration-300 ${isIntroButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
                   Get in touch <ChevronRight className="ml-1 h-4 w-4" />
@@ -256,7 +289,7 @@ export default function Home() {
             data-scroll-position="top"
             className="flex max-w-6xl flex-col justify-start space-y-1" // Reduced space-y-2 to space-y-1
           >
-            <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl" >
+            <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl">
               ABOUT ME
             </span>
             <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]"> {/* Reduced py-3 to py-2 */}
@@ -373,7 +406,7 @@ export default function Home() {
         </section>
 
         {/* Services - Reduced vertical spacing */}
-        <section data-scroll-section>
+        <section data-scroll-section id="services">
           <div
             data-scroll
             data-scroll-speed=".4"
@@ -390,7 +423,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="grid items-center gap-1 md:grid-cols-2 xl:grid-cols-3"
             >
-              <div className="flex flex-col py-1 xl:p-2" id="services">
+              <div className="flex flex-col py-1 xl:p-2">
                 <h2 className="text-5xl font-medium tracking-tight" >
                   Need more info?
                   <br />
@@ -443,7 +476,7 @@ export default function Home() {
               className="mt-3 relative overflow-hidden transition-all duration-300" /* Reduced mt-4 to mt-3 */
             >
               <span className={`absolute inset-0 flex items-center justify-center text-[0.65rem] transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
-                sharma.ishan.1910@gmail.com
+                ishansh1200@gmail.com
               </span>
               <span className={`flex items-center transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-0' : 'opacity-100'}`}>
                 Get in touch
