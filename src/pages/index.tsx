@@ -13,7 +13,6 @@ import {
 
 import Spline from "@splinetool/react-spline";
 import Link from "next/link";
-import { scrollTo } from "@/lib/utils";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
