@@ -41,6 +41,8 @@ interface SplineApp {
 type LocomotiveScrollType = {
   scrollTo: (target: HTMLElement | string | number, options?: { offset?: number; duration?: number; disableLerp?: boolean }) => void;
   destroy: () => void;
+  on: (event: string, callback: () => void) => void;
+  update: () => void;
 };
 
 const aboutStats = [
@@ -136,11 +138,15 @@ export default function Home() {
 
   // handle scroll
   useEffect(() => {
+    // Fall back to native scrolling if Locomotive fails to initialize
+    let usingNativeScroll = true;
+    
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-link");
 
     async function getLocomotive() {
       try {
+        // Dynamically import Locomotive Scroll
         const LocomotiveModule = await import("locomotive-scroll");
         const Locomotive = LocomotiveModule.default;
         
@@ -149,9 +155,22 @@ export default function Home() {
           el: refScrollContainer.current ?? undefined,
           smooth: true,
           offset: [0, 0],
-        }) as unknown as LocomotiveScrollType; // Type assertion to match our interface
+          multiplier: 1, // Adjust scrolling speed (lower = slower)
+          lerp: 0.1,    // Linear interpolation (lower = smoother)
+          smartphone: {
+            smooth: true,
+          },
+        }) as unknown as LocomotiveScrollType;
         
         setLocomotiveScroll(locoScroll);
+        usingNativeScroll = false;
+        
+        // Update Locomotive Scroll when content changes
+        setTimeout(() => {
+          if (locoScroll) {
+            locoScroll.update();
+          }
+        }, 500);
         
         // Add event listener for hash changes
         document.addEventListener('click', (e) => {
@@ -179,16 +198,25 @@ export default function Home() {
         });
       } catch (error) {
         console.error("Failed to load locomotive-scroll:", error);
+        // Fall back to native scroll
+        usingNativeScroll = true;
+        
+        // Make sure the container is scrollable
+        if (refScrollContainer.current) {
+          refScrollContainer.current.style.height = 'auto';
+          refScrollContainer.current.style.overflow = 'visible';
+        }
       }
     }
 
     function handleScroll() {
       let current = "";
-      setIsScrolled(window.scrollY > 0);
+      const scrollY = window.scrollY || window.pageYOffset;
+      setIsScrolled(scrollY > 0);
 
       sections.forEach((section) => {
         const sectionTop = section.offsetTop;
-        if (window.scrollY >= sectionTop - 250) {
+        if (scrollY >= sectionTop - 250) {
           current = section.getAttribute("id") ?? "";
         }
       });
@@ -205,6 +233,12 @@ export default function Home() {
     void getLocomotive();
     window.addEventListener("scroll", handleScroll);
 
+    // Set overflow to visible in case it's being blocked
+    document.body.style.overflow = 'visible';
+    if (refScrollContainer.current) {
+      refScrollContainer.current.style.overflow = 'visible';
+    }
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       // Clean up locomotive scroll instance
@@ -212,7 +246,7 @@ export default function Home() {
         locomotiveScroll.destroy();
       }
     };
-  }, [locomotiveScroll]); // Add locomotiveScroll to the dependency array
+  }, []); // Remove locomotiveScroll from dependencies to avoid recreating on every state change
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -240,14 +274,18 @@ export default function Home() {
 
   return (
     <Container>
-      <div ref={refScrollContainer}>
+      <div 
+        ref={refScrollContainer} 
+        className="scroll-container"
+        style={{ height: 'auto', overflow: 'visible' }}
+      >
         <Gradient />
 
         {/* Intro - Reduced vertical spacing */}
         <section
           data-scroll-section
           id="Home"
-          className=" flex w-full flex-col items-center xl:mt-0 xl:min-h-[80vh] xl:flex-row xl:justify-between mt-10 mb-12"
+          className="flex w-full flex-col items-center xl:mt-0 xl:min-h-[80vh] xl:flex-row xl:justify-between mt-10 mb-12"
         >
           <div className={styles.intro}>
             <div
@@ -265,7 +303,6 @@ export default function Home() {
             <div>
               <h1
                 data-scroll
-                data-scroll-enable-touch-speed
                 data-scroll-speed=".06"
                 data-scroll-direction="horizontal"
               >
@@ -279,7 +316,6 @@ export default function Home() {
               </h1>
               <p
                 data-scroll
-                data-scroll-enable-touch-speed
                 data-scroll-speed=".06"
                 className="mt-1 max-w-lg tracking-tight text-muted-foreground 2xl:text-xl"
               >
@@ -289,7 +325,6 @@ export default function Home() {
             </div>
             <span
               data-scroll
-              data-scroll-enable-touch-speed
               data-scroll-speed=".06"
               className="flex flex-row items-center space-x-1.5 pt-3"
             >
