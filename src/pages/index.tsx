@@ -99,10 +99,38 @@ export default function Home() {
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
   const [locomotiveScroll, setLocomotiveScroll] = useState<LocomotiveScrollType | null>(null);
+  const splineRef = useRef<any>(null);
 
   // Button hover states for all "Get in touch" buttons
   const [isIntroButtonHovered, setIsIntroButtonHovered] = useState(false);
   const [isContactButtonHovered, setIsContactButtonHovered] = useState(false);
+
+  // Function to make the 3D model static
+  const onSplineLoad = (splineApp: any) => {
+    splineRef.current = splineApp;
+    
+    // Make the 3D model static by disabling interactions
+    if (splineApp) {
+      // Disable orbit controls
+      if (splineApp.orbitControls) {
+        splineApp.orbitControls.enabled = false;
+      }
+      
+      // Pause any animations
+      if (splineApp.enterFrame) {
+        const originalEnterFrame = splineApp.enterFrame;
+        splineApp.enterFrame = () => {
+          // Don't do anything - this prevents animations
+          return;
+        };
+      }
+      
+      // Disable events
+      if (splineApp.canvas) {
+        splineApp.canvas.style.pointerEvents = 'none';
+      }
+    }
+  };
 
   // handle scroll
   useEffect(() => {
@@ -286,26 +314,30 @@ export default function Home() {
             data-scroll
             data-scroll-speed="-.01"
             id={styles["canvas-container"]}
-            className="mt-4 h-full w-full xl:mt-0" // Reduced mt-6 to mt-4
+            className="mt-4 h-full w-full xl:mt-0 pointer-events-none" // Added pointer-events-none
           >
             <Suspense fallback={<span>Loading...</span>}>
-              <Spline scene="/assets/scene.splinecode" />
+              <Spline 
+                scene="/assets/scene.splinecode" 
+                onLoad={onSplineLoad}
+                style={{ pointerEvents: 'none' }} // Disable pointer events
+              />
             </Suspense>
           </div>
         </section>
 
         {/* About - Reduced vertical spacing */}
-        <section data-scroll-section className="mt-0" id="About"> {/* Changed from mt-2 to mt-0 */}
+        <section data-scroll-section className="mt-0" id="About">
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
-            className="flex max-w-6xl flex-col justify-start space-y-1" // Reduced space-y-2 to space-y-1
+            className="flex max-w-6xl flex-col justify-start space-y-1"
           >
             <span className="text-6xl tracking-tighter text-foreground 2xl:text-6xl">
               ABOUT ME
             </span>
-            <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]"> {/* Reduced py-3 to py-2 */}
+            <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]">
               I am currently pursuing a degree in {' '}
               <span className="font-medium">BTech-Artificial Intelligence</span>, and I decided to pursue my passion for programming. I started taking online courses and reading documentation about {' '}
               <span className="font-medium">full-stack web development</span>.
@@ -314,13 +346,13 @@ export default function Home() {
               I am also familiar with C++, <span className="font-medium"> Python and JAVA </span>and am always looking to learn new technologies. I am also intersted in designing, with experience in <span className="font-medium"> Figma, Canva and Photoshop. </span>
             </h2>
 
-            <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]"> {/* Reduced py-3 to py-2 */}
+            <h2 className="py-2 text-3xl font-light leading-normal tracking-tighter text-foreground xl:text-[40px]">
               <span className="italic">When I&apos;m not coding</span>, I enjoy playing board games, playing sports, mostly football, and playing guitar. I also enjoy {" "}
               <span className="font-medium">learning new things</span>. I am currently trying to learn {" "}
               <span className="font-medium">photo and video editing.</span>
             </h2>
 
-            <div className="grid grid-cols-2 gap-4 xl:grid-cols-3 mt-1"> {/* Reduced gap-6 to gap-4 and mt-2 to mt-1 */}
+            <div className="grid grid-cols-2 gap-4 xl:grid-cols-3 mt-1">
               {aboutStats.map((stat) => (
                 <div
                   key={stat.label}
@@ -338,8 +370,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Projects - Reduced vertical spacing */}
-        <section data-scroll-section className="mt-6" id="projects"> {/* Reduced mt-10 to mt-6 */}
+        {/* Rest of component remains the same... */}
+        {/* Projects section */}
+        <section data-scroll-section className="mt-6" id="projects">
           {/* Gradient */}
           <div className="relative isolate">
             <div
@@ -355,11 +388,11 @@ export default function Home() {
               />
             </div>
           </div>
-          <div data-scroll data-scroll-speed=".4" className="mt-4 mb-8" > {/* Reduced mt-6 to mt-4 and mb-12 to mb-8 */}
-            <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter" >
+          <div data-scroll data-scroll-speed=".4" className="mt-4 mb-8">
+            <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter">
               ✨ Projects
             </span>
-            <h2 className="mt-1 text-4xl font-semibold tracking-tight xl:text-6xl"> {/* Reduced mt-2 to mt-1 */}
+            <h2 className="mt-1 text-4xl font-semibold tracking-tight xl:text-6xl">
               Streamlined digital experiences.
             </h2>
             <p className="mt-1 text-base tracking-tight text-muted-foreground xl:text-lg">
@@ -368,7 +401,7 @@ export default function Home() {
             </p>
 
             {/* Carousel */}
-            <div className="mt-4"> {/* Reduced mt-6 to mt-4 */}
+            <div className="mt-4">
               <Carousel setApi={setCarouselApi} className="w-full">
                 <CarouselContent>
                   {projects.map((project) => (
@@ -397,7 +430,7 @@ export default function Home() {
                           </Link>
                         </CardHeader>
                         <CardContent className="absolute bottom-0 w-full bg-background/50 backdrop-blur">
-                          <CardTitle className="border-t border-white/5 p-3 text-base font-normal tracking-tighter"> {/* Reduced p-4 to p-3 */}
+                          <CardTitle className="border-t border-white/5 p-3 text-base font-normal tracking-tighter">
                             {project.description}
                           </CardTitle>
                         </CardContent>
@@ -418,13 +451,13 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Services - Reduced vertical spacing */}
+        {/* Services section */}
         <section data-scroll-section id="services">
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
-            className="mt-1 mb-6 flex flex-col justify-start space-y-3" /* Reduced mt-2 to mt-1, mb-8 to mb-6, and space-y-4 to space-y-3 */
+            className="mt-1 mb-6 flex flex-col justify-start space-y-3"
           >
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -437,7 +470,7 @@ export default function Home() {
               className="grid items-center gap-1 md:grid-cols-2 xl:grid-cols-3"
             >
               <div className="flex flex-col py-1 xl:p-2">
-                <h2 className="text-5xl font-medium tracking-tight" >
+                <h2 className="text-5xl font-medium tracking-tight">
                   Need more info?
                   <br />
                   <span className="text-gradient clash-grotesk tracking-normal">
@@ -452,9 +485,9 @@ export default function Home() {
               {services.map((service) => (
                 <div
                   key={service.service}
-                  className="flex flex-col items-start rounded-md bg-white/5 p-4 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md" /* Reduced p-6 to p-4 */
+                  className="flex flex-col items-start rounded-md bg-white/5 p-4 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md"
                 >
-                  <service.icon className="my-1 text-primary" size={20} /> {/* Reduced my-2 to my-1 */}
+                  <service.icon className="my-1 text-primary" size={20} />
                   <span className="text-lg tracking-tight text-foreground">
                     {service.service}
                   </span>
@@ -467,13 +500,13 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Contact - Reduced vertical spacing */}
-        <section id="contact" data-scroll-section className="mt-6 mb-8"> {/* Reduced mt-8 to mt-6 and mb-12 to mb-8 */}
+        {/* Contact section */}
+        <section id="contact" data-scroll-section className="mt-6 mb-8">
           <div
             data-scroll
             data-scroll-speed=".4"
             data-scroll-position="top"
-            className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-6 py-6 text-center xl:py-8" /* Reduced py-8 to py-6 and xl:py-10 to xl:py-8 */
+            className="flex flex-col items-center justify-center rounded-lg bg-gradient-to-br from-primary/[6.5%] to-white/5 px-6 py-6 text-center xl:py-8"
           >
             <h2 className="text-4xl font-medium tracking-tighter xl:text-6xl">
               Let&apos;s work{" "}
@@ -486,7 +519,7 @@ export default function Home() {
             <Button
               onMouseEnter={() => setIsContactButtonHovered(true)}
               onMouseLeave={() => setIsContactButtonHovered(false)}
-              className="mt-3 relative overflow-hidden transition-all duration-300" /* Reduced mt-4 to mt-3 */
+              className="mt-3 relative overflow-hidden transition-all duration-300"
             >
               <span className={`absolute inset-0 flex items-center justify-center text-[0.55rem] transition-opacity duration-300 ${isContactButtonHovered ? 'opacity-100' : 'opacity-0'}`}>
                 sharma.ishan1910@gmail.com
