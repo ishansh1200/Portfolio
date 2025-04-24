@@ -157,9 +157,7 @@ export default function Home() {
           offset: [0, 0],
           multiplier: 1, // Adjust scrolling speed (lower = slower)
           lerp: 0.1,    // Linear interpolation (lower = smoother)
-          smartphone: {
-            smooth: true,
-          },
+        
         }) as unknown as LocomotiveScrollType;
         
         setLocomotiveScroll(locoScroll);
