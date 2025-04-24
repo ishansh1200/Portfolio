@@ -155,8 +155,8 @@ export default function Home() {
           el: refScrollContainer.current ?? undefined,
           smooth: true,
           offset: [0, 0],
-          multiplier: 1, // Adjust scrolling speed (lower = slower)
-          lerp: 0.1,    // Linear interpolation (lower = smoother)
+          multiplier: 3, // Adjust scrolling speed (lower = slower)
+          lerp: 0.08,    // Linear interpolation (lower = smoother)
         
         }) as unknown as LocomotiveScrollType;
         
