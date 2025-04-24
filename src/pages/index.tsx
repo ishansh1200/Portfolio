@@ -26,6 +26,17 @@ import {
 import VanillaTilt from "vanilla-tilt";
 import { motion } from "framer-motion";
 
+// Define types for Spline and Locomotive Scroll
+interface SplineApp {
+  orbitControls?: {
+    enabled: boolean;
+  };
+  enterFrame?: () => void;
+  canvas?: HTMLCanvasElement & {
+    style: CSSStyleDeclaration;
+  };
+}
+
 // Define a type for Locomotive Scroll instance
 type LocomotiveScrollType = {
   scrollTo: (target: HTMLElement | string | number, options?: { offset?: number; duration?: number; disableLerp?: boolean }) => void;
@@ -93,39 +104,30 @@ const services = [
 ];
 
 export default function Home() {
-  const refScrollContainer = useRef(null);
+  const refScrollContainer = useRef<HTMLDivElement>(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
   const [locomotiveScroll, setLocomotiveScroll] = useState<LocomotiveScrollType | null>(null);
-  const splineRef = useRef<any>(null);
+  const splineRef = useRef<SplineApp | null>(null);
 
   // Button hover states for all "Get in touch" buttons
   const [isIntroButtonHovered, setIsIntroButtonHovered] = useState(false);
   const [isContactButtonHovered, setIsContactButtonHovered] = useState(false);
 
   // Function to make the 3D model static
-  const onSplineLoad = (splineApp: any) => {
+  const onSplineLoad = (splineApp: SplineApp) => {
     splineRef.current = splineApp;
     
     // Make the 3D model static by disabling interactions
     if (splineApp) {
-      // Disable orbit controls
+      // Disable orbit controls safely
       if (splineApp.orbitControls) {
         splineApp.orbitControls.enabled = false;
       }
       
-      // Pause any animations
-      if (splineApp.enterFrame) {
-        const originalEnterFrame = splineApp.enterFrame;
-        splineApp.enterFrame = () => {
-          // Don't do anything - this prevents animations
-          return;
-        };
-      }
-      
-      // Disable events
+      // Disable events safely
       if (splineApp.canvas) {
         splineApp.canvas.style.pointerEvents = 'none';
       }
@@ -210,7 +212,7 @@ export default function Home() {
         locomotiveScroll.destroy();
       }
     };
-  }, []);
+  }, [locomotiveScroll]); // Add locomotiveScroll to the dependency array
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -225,8 +227,8 @@ export default function Home() {
 
   // card hover effect
   useEffect(() => {
-    const tilt: HTMLElement[] = Array.from(document.querySelectorAll("#tilt"));
-    VanillaTilt.init(tilt, {
+    const tiltElements = Array.from(document.querySelectorAll<HTMLElement>("#tilt"));
+    VanillaTilt.init(tiltElements, {
       speed: 300,
       glare: true,
       "max-glare": 0.1,
@@ -314,13 +316,13 @@ export default function Home() {
             data-scroll
             data-scroll-speed="-.01"
             id={styles["canvas-container"]}
-            className="mt-4 h-full w-full xl:mt-0 pointer-events-none" // Added pointer-events-none
+            className="mt-4 h-full w-full xl:mt-0 pointer-events-none"
           >
             <Suspense fallback={<span>Loading...</span>}>
               <Spline 
                 scene="/assets/scene.splinecode" 
                 onLoad={onSplineLoad}
-                style={{ pointerEvents: 'none' }} // Disable pointer events
+                style={{ pointerEvents: 'none' }}
               />
             </Suspense>
           </div>
@@ -370,7 +372,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Rest of component remains the same... */}
         {/* Projects section */}
         <section data-scroll-section className="mt-6" id="projects">
           {/* Gradient */}
